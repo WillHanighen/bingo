@@ -1,4 +1,4 @@
-# Modern Bingo
+# [Modern Bingo](https://willhanighen.github.io/bingo/)
 
 I made a modern bingo game with over 1,200 lines of code.
 
