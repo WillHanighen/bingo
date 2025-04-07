@@ -355,6 +355,7 @@ function handleImageUpload(index) {
                 
                 // Show modal
                 const modal = document.getElementById('image-preview-modal');
+                modal.style.display = 'flex';
                 modal.classList.add('show');
             };
             
@@ -380,6 +381,7 @@ function openTextModal(index) {
     
     // Show modal
     const modal = document.getElementById('text-modal');
+    modal.style.display = 'flex';
     modal.classList.add('show');
 }
 
@@ -415,9 +417,17 @@ function saveImage() {
 
 // Close all modals
 function closeModals() {
-    document.getElementById('text-modal').style.display = 'none';
-    document.getElementById('image-preview-modal').style.display = 'none';
-    document.getElementById('win-modal').style.display = 'none';
+    const textModal = document.getElementById('text-modal');
+    const imageModal = document.getElementById('image-preview-modal');
+    const winModal = document.getElementById('win-modal');
+    
+    textModal.classList.remove('show');
+    imageModal.classList.remove('show');
+    winModal.classList.remove('show');
+    
+    textModal.style.display = 'none';
+    imageModal.style.display = 'none';
+    winModal.style.display = 'none';
     currentSquareIndex = null;
 }
 
