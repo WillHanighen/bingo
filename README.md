@@ -1,4 +1,7 @@
 # Modern Bingo
 
 I made a modern bingo game with over 1,200 lines of code.
-their are bugs such as the win popup showing every move after completing a sucsessfull bingo and I may or may not fix them in the future, I dunno... I mostly made this because I saw Mr. Here (Jimmy Here) playing bingo on live and wanted to make something better then moving and duplicating PNGs in OBS.
+
+There are a few bugs — like the win popup showing up after every move once you complete a bingo, text not fitting inside the boxes properly, and probably other things I haven’t found yet. I might fix them at some point... or not.
+
+I mostly made this because I saw Mr. Here (Jimmy Here) playing bingo live, and I thought I could make something better than just moving and duplicating PNGs in OBS.
