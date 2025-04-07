@@ -1,0 +1,699 @@
+/* Modern Bingo Board Styles */
+:root {
+    /* Light theme variables */
+    --primary-color: #4a6bff;
+    --secondary-color: #f5f7ff;
+    --accent-color: #ff6b6b;
+    --text-color: #333;
+    --light-gray: #f0f2f5;
+    --card-bg: white;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --transition-speed: 0.3s;
+}
+
+/* Dark theme variables */
+[data-theme="dark"] {
+    --primary-color: #6c8dff;
+    --secondary-color: #1a1a2e;
+    --accent-color: #ff6b6b;
+    --text-color: #f0f0f0;
+    --light-gray: #2a2a3a;
+    --card-bg: #2d2d42;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    padding: 20px;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.title-container {
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    color: var(--primary-color);
+    margin-bottom: 5px;
+    transition: color var(--transition-speed) ease;
+    outline: none;
+}
+
+h1:focus {
+    border-bottom: 2px dashed var(--primary-color);
+}
+
+.title-container small {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.theme-toggle {
+    margin-left: auto;
+}
+
+#theme-toggle-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: color var(--transition-speed) ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--light-gray);
+}
+
+#theme-toggle-btn:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+[data-theme="light"] .fa-sun {
+    display: none;
+}
+
+[data-theme="dark"] .fa-moon {
+    display: none;
+}
+
+.mode-toggle, .bingo-mode .toggle-buttons {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0 20px;
+}
+
+.mode-toggle button, .toggle-buttons button {
+    background-color: var(--light-gray);
+    border: none;
+    padding: 8px 16px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+    color: var(--text-color);
+}
+
+.mode-toggle button.active, .toggle-buttons button.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn:hover {
+    background-color: #3a5bef;
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow);
+}
+
+#import-json {
+    display: none;
+}
+
+.import-label {
+    display: inline-flex;
+}
+
+.play-options {
+    margin-bottom: 20px;
+}
+
+.bingo-mode {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.bingo-board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 10px;
+    margin-top: 20px;
+}
+
+.bingo-square {
+    aspect-ratio: 1/1;
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition-speed) ease;
+    cursor: pointer;
+}
+
+.bingo-square:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.bingo-square.marked {
+    background-color: rgba(74, 107, 255, 0.2);
+}
+
+.bingo-square.free-space {
+    background-color: rgba(255, 107, 107, 0.2);
+}
+
+.bingo-square img {
+    max-width: 100%;
+    max-height: 70%;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.bingo-square .text-content {
+    margin-top: 5px;
+    font-size: 14px;
+    word-break: break-word;
+    color: var(--text-color);
+    transition: color var(--transition-speed) ease;
+}
+
+/* Creation mode hover controls */
+.square-controls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    opacity: 0;
+    transition: opacity var(--transition-speed) ease;
+    border-radius: var(--border-radius);
+}
+
+.bingo-square:hover .square-controls {
+    opacity: 1;
+}
+
+.control-btn {
+    background-color: white;
+    color: var(--primary-color);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+    font-size: 16px;
+}
+
+.control-btn:hover {
+    transform: scale(1.1);
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Play mode X mark */
+.x-mark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 60px;
+    color: var(--accent-color);
+    opacity: 0;
+    transition: opacity var(--transition-speed) ease;
+    pointer-events: none;
+}
+
+.bingo-square:hover .x-mark {
+    opacity: 0.3;
+}
+
+.bingo-square.marked .x-mark {
+    opacity: 1;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.close-modal {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: color var(--transition-speed) ease;
+}
+
+.close-modal:hover {
+    color: var(--accent-color);
+}
+
+/* Win modal specific styles */
+.win-content {
+    text-align: center;
+    padding: 30px;
+}
+
+.win-content h2 {
+    color: var(--accent-color);
+    font-size: 36px;
+    margin-bottom: 20px;
+    animation: winPulse 1.5s infinite alternate;
+}
+
+@keyframes winPulse {
+    from {
+        transform: scale(1);
+        text-shadow: 0 0 5px rgba(255, 107, 107, 0.5);
+    }
+    to {
+        transform: scale(1.1);
+        text-shadow: 0 0 15px rgba(255, 107, 107, 0.8);
+    }
+}
+
+.win-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.win-message i {
+    font-size: 60px;
+    color: gold;
+    margin-bottom: 15px;
+    animation: trophySpin 3s infinite;
+}
+
+@keyframes trophySpin {
+    0% {
+        transform: rotate(-10deg);
+    }
+    50% {
+        transform: rotate(10deg);
+    }
+    100% {
+        transform: rotate(-10deg);
+    }
+}
+
+.win-message p {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+#continue-playing {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 16px;
+    transition: all var(--transition-speed) ease;
+}
+
+#continue-playing:hover {
+    background-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Button animations and effects */
+.btn, .control-btn, #theme-toggle-btn, .mode-toggle button, .toggle-buttons button {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::after, .control-btn::after, #theme-toggle-btn::after, .mode-toggle button::after, .toggle-buttons button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%, -50%);
+    transform-origin: 50% 50%;
+}
+
+.btn:active::after, .control-btn:active::after, #theme-toggle-btn:active::after, 
+.mode-toggle button:active::after, .toggle-buttons button:active::after {
+    opacity: 1;
+    transform: scale(50, 50) translate(-50%, -50%);
+    transition: transform 0.5s, opacity 1s;
+}
+
+.btn, .mode-toggle button, .toggle-buttons button {
+    transform: translateY(0);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all var(--transition-speed) cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn:hover, .mode-toggle button:hover, .toggle-buttons button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 14px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active, .mode-toggle button:active, .toggle-buttons button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mode-toggle button.active, .toggle-buttons button.active {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(74, 107, 255, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(74, 107, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(74, 107, 255, 0);
+    }
+}
+
+/* Enhanced square hover animations */
+.bingo-square {
+    transform: scale(1);
+    transition: all var(--transition-speed) cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.bingo-square:hover {
+    transform: scale(1.05) translateY(-5px);
+    z-index: 1;
+}
+
+.bingo-square.marked {
+    animation: mark-square 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes mark-square {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* X mark animation */
+.bingo-square.marked .x-mark i {
+    animation: rotate-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes rotate-in {
+    0% {
+        transform: rotate(-180deg) scale(0);
+        opacity: 0;
+    }
+    100% {
+        transform: rotate(0) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Control buttons animations */
+.control-btn {
+    transform: scale(1);
+    transition: all var(--transition-speed) cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.control-btn:hover {
+    transform: scale(1.15);
+}
+
+.control-btn:active {
+    transform: scale(0.95);
+}
+
+/* Toggle buttons container */
+.toggle-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.toggle-buttons button {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+    border-radius: var(--border-radius);
+    white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .bingo-board {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .controls {
+        flex-direction: column;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 5% auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .bingo-board {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Button activate animation */
+.button-activate {
+    animation: button-activate 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes button-activate {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Highlight relevant squares for bingo modes */
+.highlight-relevant {
+    position: relative;
+}
+
+.highlight-relevant::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border: 2px dashed var(--primary-color);
+    border-radius: calc(var(--border-radius) + 2px);
+    animation: pulse-border 2s infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes pulse-border {
+    0% {
+        opacity: 0.2;
+    }
+    50% {
+        opacity: 0.8;
+    }
+    100% {
+        opacity: 0.2;
+    }
+}
+
+/* Modal animations */
+.modal.show .modal-content {
+    animation: slide-up 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes slide-up {
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Board title animations */
+#board-title {
+    position: relative;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+#board-title:focus {
+    outline: none;
+    padding: 0 5px;
+}
+
+#board-title:hover {
+    color: var(--accent-color);
+}
+
+/* Enhance bingo square animations */
+.bingo-square.free-space {
+    position: relative;
+    overflow: hidden;
+}
+
+.bingo-square.free-space::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,107,107,0.2) 0%, rgba(255,107,107,0) 70%);
+    animation: pulse-free 3s infinite;
+}
+
+@keyframes pulse-free {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.3;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.1;
+    }
+    100% {
+        transform: scale(0.8);
+        opacity: 0.3;
+    }
+}
+
+/* X mark enhancements */
+.x-mark i {
+    font-size: 3rem;
+    filter: drop-shadow(0 0 5px rgba(255, 107, 107, 0.5));
+}
+
+.bingo-square.marked .x-mark i {
+    transform-origin: center;
+}
+
+/* Enhanced hover effects for buttons */
+.btn:hover, .control-btn:hover, #theme-toggle-btn:hover {
+    filter: brightness(1.1);
+}

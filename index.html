@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Bingo Board</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="title-container">
+                <h1 id="board-title" contenteditable="true">Modern Bingo Board</h1>
+                <small>(Click to edit title)</small>
+            </div>
+            <div class="theme-toggle">
+                <button id="theme-toggle-btn">
+                    <i class="fas fa-moon"></i>
+                    <i class="fas fa-sun"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="mode-toggle">
+            <button id="creation-mode" class="active">Creation Mode</button>
+            <button id="play-mode">Play Mode</button>
+        </div>
+
+        <div class="controls">
+            <button id="randomize-btn" class="btn"><i class="fas fa-random"></i> Randomize</button>
+            <button id="reset-btn" class="btn"><i class="fas fa-undo"></i> Reset</button>
+            <button id="export-btn" class="btn"><i class="fas fa-download"></i> Export JSON</button>
+            <label for="import-json" class="btn import-label"><i class="fas fa-upload"></i> Import JSON</label>
+            <input type="file" id="import-json" accept=".json">
+        </div>
+
+        <div class="play-options">
+            <div class="bingo-mode">
+                <span>Bingo Mode:</span>
+                <div class="toggle-buttons">
+                    <button id="single-bingo" class="active" title="Win by completing any row, column, or diagonal">Single Line</button>
+                    <button id="cross-bingo" title="Win by completing both diagonals">Cross</button>
+                    <button id="plus-bingo" title="Win by completing middle row and column">Plus</button>
+                    <button id="blackout-bingo" title="Win by marking all squares">Blackout</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bingo-board">
+            <!-- Bingo board will be generated via JavaScript -->
+        </div>
+
+        <!-- Modal for text input -->
+        <div id="text-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Add Text</h2>
+                <textarea id="square-text" placeholder="Enter text for this square"></textarea>
+                <button id="save-text" class="btn">Save</button>
+            </div>
+        </div>
+
+        <!-- Modal for image upload preview -->
+        <div id="image-preview-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Image Preview</h2>
+                <div class="image-preview-container">
+                    <img id="image-preview" src="" alt="Preview">
+                </div>
+                <button id="confirm-image" class="btn">Confirm</button>
+            </div>
+        </div>
+
+        <!-- Win notification modal -->
+        <div id="win-modal" class="modal">
+            <div class="modal-content win-content">
+                <span class="close-modal">&times;</span>
+                <h2>BINGO!</h2>
+                <div class="win-message">
+                    <i class="fas fa-trophy"></i>
+                    <p>Congratulations! You won!</p>
+                </div>
+                <button id="continue-playing" class="btn">Continue Playing</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
