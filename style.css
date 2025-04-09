@@ -753,3 +753,37 @@ h1:focus {
 .btn:hover, .control-btn:hover, #theme-toggle-btn:hover {
     filter: brightness(1.1);
 }
+
+/* Footer Styles */
+.footer {
+    margin-top: 40px;
+    padding: 15px 0;
+    border-top: 1px solid var(--light-gray);
+    text-align: center;
+}
+
+.footer-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color var(--transition-speed) ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.footer a:hover {
+    color: #3a5bef;
+    text-decoration: underline;
+}
+
+.footer .license {
+    margin-top: 5px;
+    color: var(--text-color);
+    opacity: 0.7;
+}
