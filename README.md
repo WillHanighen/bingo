@@ -2,6 +2,6 @@
 
 I made a modern bingo game with over 1,200 lines of code.
 
-There are a few bugs — like the win popup showing up after every move after you complete a bingo and probably other things I haven’t found yet.
+As for bugs, I haven't found any. Please open an issue if you find one.
 
 I mostly made this because I saw Mr. Here (Jimmy Here) playing bingo live, and I thought I could make something better than just moving and duplicating PNGs in OBS.

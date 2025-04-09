@@ -106,7 +106,7 @@ h1:focus {
     display: none;
 }
 
-.mode-toggle, .bingo-mode .toggle-buttons {
+.mode-toggle {
     display: flex;
     gap: 10px;
     margin: 10px 0 20px;
@@ -145,6 +145,7 @@ h1:focus {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    font-size: 14px;
 }
 
 .btn:hover {
@@ -159,6 +160,21 @@ h1:focus {
 
 .import-label {
     display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+
+.import-label:hover {
+    background-color: #3a5bef;
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow);
 }
 
 .play-options {
@@ -167,8 +183,15 @@ h1:focus {
 
 .bingo-mode {
     display: flex;
-    align-items: center;
-    gap: 15px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.bingo-mode .toggle-buttons {
+    display: flex;
+    gap: 10px;
+    margin: 5px 0;
     flex-wrap: wrap;
 }
 
@@ -474,7 +497,7 @@ h1:focus {
     transition: transform 0.5s, opacity 1s;
 }
 
-.btn, .mode-toggle button, .toggle-buttons button {
+.btn, .import-label, .mode-toggle button, .toggle-buttons button {
     transform: translateY(0);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: all var(--transition-speed) cubic-bezier(0.175, 0.885, 0.32, 1.275);

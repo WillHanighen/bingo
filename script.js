@@ -5,6 +5,7 @@ let currentMode = 'creation'; // 'creation' or 'play'
 let currentSquareIndex = null;
 let bingoData = [];
 let bingoMode = 'single'; // 'single', 'cross', 'plus', or 'blackout'
+let winNotified = false; // Flag to track if the win notification has been shown
 const BOARD_SIZE = 5; // 5x5 board
 const MIDDLE_SQUARE_INDEX = 12; // Middle square in a 5x5 grid (0-indexed)
 const MIDDLE_ROW = 2; // Middle row in a 5x5 grid (0-indexed)
@@ -12,15 +13,31 @@ const MIDDLE_COL = 2; // Middle column in a 5x5 grid (0-indexed)
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize default values
+    currentMode = 'creation';
+    bingoMode = 'single';
+    
+    // Load board state from cookies first
+    loadBoardStateFromCookies();
+    
     initializeBingoBoard();
     setupEventListeners();
     initializeTheme();
+    
+    // Make sure only one bingo mode button is active
+    document.querySelectorAll('.bingo-mode-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.getElementById(`${bingoMode}-bingo`).classList.add('active');
     
     // Save board title when user clicks away
     document.getElementById('board-title').addEventListener('blur', function() {
         // Remove any line breaks and extra spaces
         this.textContent = this.textContent.replace(/\n/g, ' ').trim();
         localStorage.setItem('boardTitle', this.textContent);
+        
+        // Save board state to cookies
+        saveBoardStateToCookies();
     });
     
     // Prevent new lines in title
@@ -39,6 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Update title editability based on mode
     updateTitleEditability();
+    
+    // Save board state when the user leaves the page
+    window.addEventListener('beforeunload', () => {
+        saveBoardStateToCookies();
+    });
 });
 
 // Initialize theme from localStorage or default to light
@@ -215,10 +237,14 @@ function addPlayControls(square) {
             this.classList.toggle('marked');
             bingoData[index].isMarked = this.classList.contains('marked');
             
+            // Save board state after marking
+            saveBoardStateToCookies();
+            
             // Check for win condition
-            if (checkForWin()) {
+            if (checkForWin() && !winNotified) {
                 setTimeout(() => {
                     showWinModal();
+                    winNotified = true; // Set flag to prevent showing the popup again
                 }, 300);
             }
         }
@@ -395,6 +421,9 @@ function saveText() {
         const square = document.querySelector(`.bingo-square[data-index="${currentSquareIndex}"]`);
         updateSquareContent(square, currentSquareIndex);
         
+        // Save to cookies
+        saveBoardStateToCookies();
+        
         // Close modal
         closeModals();
     }
@@ -409,6 +438,9 @@ function saveImage() {
         // Update square content
         const square = document.querySelector(`.bingo-square[data-index="${currentSquareIndex}"]`);
         updateSquareContent(square, currentSquareIndex);
+        
+        // Save to cookies
+        saveBoardStateToCookies();
         
         // Close modal
         closeModals();
@@ -451,6 +483,9 @@ function switchMode(mode) {
     
     // Reinitialize board with new mode
     initializeBingoBoard();
+    
+    // Save current mode to cookies
+    saveBoardStateToCookies();
 }
 
 // Update title editability based on current mode
@@ -482,14 +517,20 @@ function switchBingoMode(mode) {
     
     bingoMode = mode;
     
+    // Reset win notification flag when bingo mode changes
+    winNotified = false;
+    
     // Update bingo mode toggle buttons
-    document.getElementById('single-bingo').classList.toggle('active', mode === 'single');
-    document.getElementById('cross-bingo').classList.toggle('active', mode === 'cross');
-    document.getElementById('plus-bingo').classList.toggle('active', mode === 'plus');
-    document.getElementById('blackout-bingo').classList.toggle('active', mode === 'blackout');
+    document.querySelectorAll('.bingo-mode-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.getElementById(`${bingoMode}-bingo`).classList.add('active');
     
     // Highlight relevant squares based on the selected mode
     highlightRelevantSquares();
+    
+    // Save bingo mode to cookies
+    saveBoardStateToCookies();
 }
 
 // Highlight squares relevant to the current bingo mode
@@ -557,10 +598,16 @@ function randomizeBingoBoard() {
     
     // Reinitialize board
     initializeBingoBoard();
+    
+    // Save reset board to cookies
+    saveBoardStateToCookies();
 }
 
 // Reset the bingo board
 function resetBingoBoard() {
+    // Reset win notification flag
+    winNotified = false;
+    
     // In creation mode, clear all data except the middle square
     if (currentMode === 'creation') {
         for (let i = 0; i < BOARD_SIZE * BOARD_SIZE; i++) {
@@ -589,6 +636,9 @@ function resetBingoBoard() {
     
     // Reinitialize board
     initializeBingoBoard();
+    
+    // Save reset board to cookies
+    saveBoardStateToCookies();
 }
 
 // Export bingo board data to JSON
@@ -653,6 +703,9 @@ function importFromJSON(file) {
                     bingoData[MIDDLE_SQUARE_INDEX].isMarked = true;
                     
                     initializeBingoBoard();
+                    
+                    // Save imported board to cookies
+                    saveBoardStateToCookies();
                 } else {
                     alert('Invalid JSON format or board size mismatch.');
                 }
@@ -667,6 +720,9 @@ function importFromJSON(file) {
                     bingoData[MIDDLE_SQUARE_INDEX].isMarked = true;
                     
                     initializeBingoBoard();
+                    
+                    // Save imported board to cookies
+                    saveBoardStateToCookies();
                 } else {
                     alert('Invalid JSON format or board size mismatch.');
                 }
@@ -679,6 +735,91 @@ function importFromJSON(file) {
     };
     
     reader.readAsText(file);
+}
+
+// Save board state to cookies
+function saveBoardStateToCookies() {
+    // Create a data object containing all necessary information
+    const boardState = {
+        bingoData: bingoData,
+        currentMode: currentMode,
+        bingoMode: bingoMode,
+        boardTitle: document.getElementById('board-title').textContent,
+        winNotified: winNotified // Save win notification state
+    };
+    
+    // Convert to JSON string and store in a cookie that expires in 30 days
+    const jsonData = JSON.stringify(boardState);
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 30);
+    
+    // Set the cookie
+    document.cookie = `bingoState=${encodeURIComponent(jsonData)}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Strict`;
+}
+
+// Load board state from cookies
+function loadBoardStateFromCookies() {
+    // Get the cookie value
+    const cookies = document.cookie.split(';');
+    let bingoStateCookie = '';
+    
+    for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.startsWith('bingoState=')) {
+            bingoStateCookie = cookie.substring('bingoState='.length, cookie.length);
+            break;
+        }
+    }
+    
+    // Reset win notification flag on page load
+    winNotified = false;
+    
+    // If cookie exists, parse and load the data
+    if (bingoStateCookie) {
+        try {
+            const boardState = JSON.parse(decodeURIComponent(bingoStateCookie));
+            
+            // Restore bingoData
+            if (boardState.bingoData && boardState.bingoData.length === BOARD_SIZE * BOARD_SIZE) {
+                bingoData = boardState.bingoData;
+            }
+            
+            // Restore currentMode
+            if (boardState.currentMode) {
+                currentMode = boardState.currentMode;
+                
+                // Update UI mode buttons
+                document.getElementById('creation-mode').classList.toggle('active', currentMode === 'creation');
+                document.getElementById('play-mode').classList.toggle('active', currentMode === 'play');
+            }
+            
+            // Restore bingoMode
+            if (boardState.bingoMode) {
+                bingoMode = boardState.bingoMode;
+                
+                // Update UI bingo mode buttons - first remove 'active' from all buttons
+                document.querySelectorAll('.bingo-mode-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                // Then add 'active' only to the current mode
+                document.getElementById(`${bingoMode}-bingo`).classList.add('active');
+            }
+            
+            // Restore board title
+            if (boardState.boardTitle) {
+                document.getElementById('board-title').textContent = boardState.boardTitle;
+            }
+            
+            // Restore win notification state if it exists
+            if (boardState.winNotified !== undefined) {
+                winNotified = boardState.winNotified;
+            }
+            
+            console.log('Loaded board state from cookies');
+        } catch (error) {
+            console.error('Error loading board state from cookies:', error);
+        }
+    }
 }
 
 // Setup all event listeners
